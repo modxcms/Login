@@ -61,12 +61,12 @@ class LoginConfirmRegisterController extends LoginController {
             return '';
         }
         
+        $this->addSessionContexts();
+        
         /* invoke OnUserActivate event */
         $this->modx->invokeEvent('OnUserActivate',array(
             'user' => &$this->user,
         ));
-
-        $this->addSessionContexts();
 
         $this->redirectBack();
         return '';
