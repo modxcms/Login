@@ -328,4 +328,18 @@ class Login {
         }
         return $success;
     }
+
+    /**
+     * Helper method to empty users cachepwd field.
+     *
+     * @access public
+     * @param integer $userID
+     * @return void
+     */
+    public function emptyCachePwd($userID) {
+        $table = $this->modx->getTableName('modUser');
+        $sql = "UPDATE {$table} SET `cachepwd`='' WHERE id=".$userID;
+        $stmt = $this->modx->prepare($sql);
+        $stmt->execute();
+    }
 }

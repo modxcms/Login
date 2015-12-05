@@ -1,5 +1,7 @@
 Changelog file for Login component.
 
+- Fixed empty cachepwd field in activation process (again, ... sorry!)
+
 Login 1.9.1
 ====================================
 - [[!+error.message]] returns detailed error
