@@ -1,5 +1,9 @@
 Changelog file for Login component.
 
+Login 1.9.3
+====================================
+- Added activePage propetty to ConfirmRegister processor
+
 Login 1.9.2
 ====================================
 - Fix sending register activation email

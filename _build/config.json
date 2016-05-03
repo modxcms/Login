@@ -3,7 +3,7 @@
   "lowCaseName": "login",
   "description": "Login and Registrations",
   "author": "Jason Coward & Shaun McCormick",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "package": {
     "elements": {
       "snippets": [
@@ -174,6 +174,11 @@
             {
               "name": "errorPage",
               "description": "prop_confirmregister.errorpage_desc",
+              "value": ""
+            },
+            {
+              "name": "activePage",
+              "description": "prop_confirmregister.activepage_desc",
               "value": ""
             }
           ]

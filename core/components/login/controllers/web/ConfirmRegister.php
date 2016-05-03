@@ -99,18 +99,21 @@ class LoginConfirmRegisterController extends LoginController {
      */
     public function getUser() {
         $this->user = $this->modx->getObject('modUser',array('username' => $this->username));
-        if ($this->user == null || $this->user->get('active')) {
+        if ($this->user == null) {
             $this->redirectAfterFailure();
+        } elseif ($this->user->get('active')) {
+            $activePage = $this->getProperty('activePage', false, 'isset');
+            $this->redirectAfterFailure($activePage);
         }
         return $this->user;
     }
 
     /**
      * Handle the redirection after a failed verification
-     * @return void
+     * @param mixed $id Resource ID to redirect to - defa
      */
-    public function redirectAfterFailure() {
-        $errorPage = $this->getProperty('errorPage',false,'isset');
+    public function redirectAfterFailure($id = null) {
+        $errorPage = (is_null($id)) ? $this->getProperty('errorPage', false, 'isset') : $id;
         if (!empty($errorPage)) {
             $url = $this->modx->makeUrl($errorPage,'','','full');
             $this->modx->sendRedirect($url);
