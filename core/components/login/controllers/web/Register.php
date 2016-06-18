@@ -123,10 +123,12 @@ class LoginRegisterController extends LoginController {
         }
 
         $placeholders = $this->dictionary->toArray();
+        $this->modx->setPlaceholders($placeholders, $placeholderPrefix);
         foreach ($placeholders as $k => $v) {
-            if (is_array($v)) $placeholders[$k] = json_encode($v);
+            if (is_array($v)) {
+                $this->modx->setPlaceholder($placeholderPrefix . $k, json_encode($v));
+            }
         }
-        $this->modx->setPlaceholders($placeholders,$placeholderPrefix);
         return '';
     }
 
