@@ -152,14 +152,18 @@ class LoginUpdateProfileController extends LoginController {
      */
     public function setFieldPlaceholders() {
         $placeholders = $this->profile->toArray();
+        $placeholderPrefix = $this->getProperty('placeholderPrefix'));
         /* add extended fields to placeholders */
         if ($this->getProperty('useExtended',true,'isset')) {
             $extended = $this->profile->get('extended');
             if (!empty($extended) && is_array($extended)) {
                 $placeholders = array_merge($extended,$placeholders);
+        $this->modx->toPlaceholders($placeholders, $placeholderPrefix);
+        foreach ($placeholders as $k => $v) {
+            if (is_array($v)) {
+                $this->modx->setPlaceholder($placeholderPrefix . $k, json_encode($v));
             }
         }
-        $this->modx->toPlaceholders($placeholders,$this->getProperty('placeholderPrefix'));
     }
 
     /**
@@ -200,9 +204,15 @@ class LoginUpdateProfileController extends LoginController {
         $this->preventDuplicateEmails();
 
         if ($this->validator->hasErrors()) {
+            $placeholders = $this->dictionary->toArray();
             $placeholderPrefix = $this->getProperty('placeholderPrefix');
             $this->modx->toPlaceholders($this->validator->getErrors(),$placeholderPrefix.'error');
-            $this->modx->toPlaceholders($this->dictionary->toArray(),$placeholderPrefix);
+            $this->modx->toPlaceholders($placeholders, $placeholderPrefix);
+            foreach ($placeholders as $k => $v) {
+                if (is_array($v)) {
+                    $this->modx->setPlaceholder($placeholderPrefix . $k, json_encode($v));
+                }
+            }
             $errors = array();
 			$es = $this->validator->getErrors();
 			foreach ($es as $key => $error) {
