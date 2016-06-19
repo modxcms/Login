@@ -98,24 +98,24 @@ class LoginRegisterController extends LoginController {
         }
         $this->validateEmail();
 
-        $placeholderPrefix = $this->getProperty('placeholderPrefix','');
+        $placeholderPrefix = rtrim($this->getProperty('placeholderPrefix', ''), '.');
         if ($this->validator->hasErrors()) {
-            $this->modx->toPlaceholders($this->validator->getErrors(),$placeholderPrefix.'error');
-            $this->modx->setPlaceholder($placeholderPrefix.'validation_error',true);
+            $this->modx->toPlaceholders($this->validator->getErrors(), $placeholderPrefix . '.error');
+            $this->modx->setPlaceholder($placeholderPrefix . '.validation_error', true);
         } else {
 
             $this->loadPreHooks();
 
             /* process hooks */
             if ($this->preHooks->hasErrors()) {
-                $this->modx->toPlaceholders($this->preHooks->getErrors(),$placeholderPrefix.'error');
+                $this->modx->toPlaceholders($this->preHooks->getErrors(), $placeholderPrefix . '.error');
                 $errorMsg = $this->preHooks->getErrorMessage();
-                $this->modx->setPlaceholder($placeholderPrefix.'error.message',$errorMsg);
+                $this->modx->setPlaceholder($placeholderPrefix . '.error.message', $errorMsg);
             } else {
                 /* everything good, go ahead and register */
                 $result = $this->runProcessor('register');
                 if ($result !== true) {
-                    $this->modx->setPlaceholder($placeholderPrefix.'error.message',$result);
+                    $this->modx->setPlaceholder($placeholderPrefix . '.error.message', $result);
                 } else {
                     $this->success = true;
                 }
@@ -123,10 +123,10 @@ class LoginRegisterController extends LoginController {
         }
 
         $placeholders = $this->dictionary->toArray();
-        $this->modx->setPlaceholders($placeholders, $placeholderPrefix);
+        $this->modx->toPlaceholders($placeholders, $placeholderPrefix);
         foreach ($placeholders as $k => $v) {
             if (is_array($v)) {
-                $this->modx->setPlaceholder($placeholderPrefix . $k, json_encode($v));
+                $this->modx->setPlaceholder($placeholderPrefix . '.' . $k, json_encode($v));
             }
         }
         return '';
@@ -308,17 +308,19 @@ class LoginRegisterController extends LoginController {
         $mathMinRange = $this->getProperty('mathMinRange',10);
         $op1 = rand($mathMinRange,$mathMaxRange);
         $op2 = rand($mathMinRange,$mathMaxRange);
+        $placeholderPrefix = rtrim($this->getProperty('placeholderPrefix', ''), '.');
         if ($op2 > $op1) { $t = $op2; $op2 = $op1; $op1 = $t; } /* swap so we always get positive #s */
         $operators = array('+','-');
         $operator = rand(0,1);
-        $this->modx->setPlaceholders(array(
+        $this->modx->toPlaceholders(array(
             $this->getProperty('mathOp1Field','op1') => $op1,
             $this->getProperty('mathOp2Field','op2') => $op2,
             $this->getProperty('mathOperatorField','operator') => $operators[$operator],
-        ),$this->getProperty('placeholderPrefix',''));
+        ), $placeholderPrefix);
     }
 
     public function loadReCaptcha() {
+        $placeholderPrefix = rtrim($this->getProperty('placeholderPrefix', ''), '.');
         /** @var reCaptcha $recaptcha */
         $recaptcha = $this->modx->getService('recaptcha','reCaptcha',$this->login->config['modelPath'].'recaptcha/');
         if ($recaptcha instanceof reCaptcha) {
@@ -327,7 +329,7 @@ class LoginRegisterController extends LoginController {
             $recaptchaWidth = $this->getProperty('recaptchaWidth',500);
             $recaptchaHeight = $this->getProperty('recaptchaHeight',300);
             $html = $recaptcha->getHtml($recaptchaTheme,$recaptchaWidth,$recaptchaHeight);
-            $this->modx->setPlaceholder($this->getProperty('placeholderPrefix','').'recaptcha_html',$html);
+            $this->modx->setPlaceholder($placeholderPrefix . '.recaptcha_html', $html);
         } else {
             $this->modx->log(modX::LOG_LEVEL_ERROR,'[Register] '.$this->modx->lexicon('register.recaptcha_err_load'));
         }

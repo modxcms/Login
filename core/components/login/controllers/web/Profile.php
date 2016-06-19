@@ -62,14 +62,14 @@ class LoginProfileController extends LoginController {
      */
     public function setToPlaceholders() {
         $placeholders = array_merge($this->profile->toArray(),$this->user->toArray());
-        $placeholderPrefix = $this->getProperty('prefix', '', 'isset');
+        $placeholderPrefix = rtrim($this->getProperty('prefix', ''), '.');
         $extended = $this->getExtended();
         $placeholders = array_merge($extended,$placeholders);
         $placeholders = $this->removePasswordPlaceholders($placeholders);
-        $this->modx->toPlaceholders($placeholders, $placeholderPrefix, '');
+        $this->modx->toPlaceholders($placeholders, $placeholderPrefix);
         foreach ($placeholders as $k => $v) {
             if (is_array($v)) {
-                $this->modx->setPlaceholder($placeholderPrefix . $k, json_encode($v));
+                $this->modx->setPlaceholder($placeholderPrefix . '.' . $k, json_encode($v));
             }
         }
         return $placeholders;
