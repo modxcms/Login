@@ -135,7 +135,7 @@ class LoginResetPasswordController extends LoginController {
         } else {
             $this->user->set('password',md5($this->password));
         }
-        if (!$this->getProperty('debug',false,'isset')) {
+        if (!$this->getProperty('debug',false)) {
             $saved = $this->user->save();
         }
         return $saved;

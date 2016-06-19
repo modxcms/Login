@@ -91,7 +91,7 @@ class LoginProfileController extends LoginController {
      */
     public function getExtended() {
         $extended = array();
-        if ($this->getProperty('useExtended',true,'isset')) {
+        if ($this->getProperty('useExtended',true)) {
             $extended = $this->profile->get('extended');
         }
         return (array) $extended;
@@ -116,7 +116,7 @@ class LoginProfileController extends LoginController {
      * @return boolean|modUser
      */
     public function getUser() {
-        $user = $this->getProperty('user',false,'isset');
+        $user = $this->getProperty('user',false);
 
         /* verify authenticated status if no user specified */
         if (empty($user) && !$this->modx->user->hasSessionContext($this->modx->context->get('key'))) {

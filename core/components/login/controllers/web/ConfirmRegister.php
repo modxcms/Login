@@ -102,7 +102,7 @@ class LoginConfirmRegisterController extends LoginController {
         if ($this->user == null) {
             $this->redirectAfterFailure();
         } elseif ($this->user->get('active')) {
-            $activePage = $this->getProperty('activePage', false, 'isset');
+            $activePage = $this->getProperty('activePage', false);
             $this->redirectAfterFailure($activePage);
         }
         return $this->user;
@@ -113,7 +113,7 @@ class LoginConfirmRegisterController extends LoginController {
      * @param mixed $id Resource ID to redirect to - defa
      */
     public function redirectAfterFailure($id = null) {
-        $errorPage = (is_null($id)) ? $this->getProperty('errorPage', false, 'isset') : $id;
+        $errorPage = (is_null($id)) ? $this->getProperty('errorPage', false) : $id;
         if (!empty($errorPage)) {
             $url = $this->modx->makeUrl($errorPage,'','','full');
             $this->modx->sendRedirect($url);
@@ -168,7 +168,7 @@ class LoginConfirmRegisterController extends LoginController {
      * @return void
      */
     public function addSessionContexts() {
-        if ($this->getProperty('authenticate',true,'isset')) {
+        if ($this->getProperty('authenticate',true)) {
             $this->modx->user =& $this->user;
             $this->modx->getUser();
             $contexts = $this->getProperty('authenticateContexts',$this->modx->context->get('key'));
@@ -186,7 +186,7 @@ class LoginConfirmRegisterController extends LoginController {
      * to a form requiring registration
      */
     public function redirectBack() {
-        $redirectBack = $this->modx->getOption('redirectBack',$_REQUEST,$this->getProperty('redirectBack',false,'isset'));
+        $redirectBack = $this->modx->getOption('redirectBack',$_REQUEST,$this->getProperty('redirectBack',false));
         $redirectBackParams = $this->modx->getOption('redirectBackParams',$_REQUEST,$this->getProperty('redirectBackParams',''));
         if (!empty($redirectBackParams)) {
             $redirectBackParams = $this->login->decodeParams($redirectBackParams);
@@ -199,7 +199,7 @@ class LoginConfirmRegisterController extends LoginController {
             if (empty($redirectParams) || !is_array($redirectParams)) $redirectParams = array();
 
             /* handle persist params from Register snippet */
-            $redirectUnsetDefaultParams = (boolean) $this->getProperty('redirectUnsetDefaultParams', 0, 'isset');
+            $redirectUnsetDefaultParams = (boolean) $this->getProperty('redirectUnsetDefaultParams', 0);
 			if(!$redirectUnsetDefaultParams) {
                 $persistParams = $_GET;
                 unset($persistParams['lp'],$persistParams['lu'],$persistParams['id']);

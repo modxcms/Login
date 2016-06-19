@@ -66,7 +66,7 @@ class LoginActiveUsersController extends LoginController {
         
         $sortBy = $this->modx->getOption('sortBy',$_REQUEST,$this->getProperty('sortBy','username'));
         $sortDir = $this->modx->getOption('sortDir',$_REQUEST,$this->getProperty('sortDir','DESC'));
-        $limit = $this->modx->getOption('limit',$_REQUEST,$this->getProperty('limit',10,'isset'));
+        $limit = $this->modx->getOption('limit',$_REQUEST,$this->getProperty('limit',10));
         $offset = $this->modx->getOption('offset',$_REQUEST,$this->getProperty('offset',0));
         
         $c = $this->modx->newQuery($classKey);
@@ -122,9 +122,9 @@ class LoginActiveUsersController extends LoginController {
      * @return string
      */
     public function output(array $list = array()) {
-        $outputSeparator = $this->getProperty('outputSeparator',"\n",'isset');
+        $outputSeparator = $this->getProperty('outputSeparator',"\n");
         $output = implode($outputSeparator,$list);
-        $toPlaceholder = $this->getProperty('toPlaceholder','','isset');
+        $toPlaceholder = $this->getProperty('toPlaceholder','');
         if (!empty($toPlaceholder)) {
             $this->modx->toPlaceholder($toPlaceholder,$output);
             return '';

@@ -81,7 +81,7 @@ class LoginUpdateProfileController extends LoginController {
                     $result = $this->runProcessor('UpdateProfile');
                     if ($result !== true) {
                         $this->modx->toPlaceholder('message',$result,'error');
-                    } else if ($this->getProperty('reloadOnSuccess',true,'isset')) {
+                    } else if ($this->getProperty('reloadOnSuccess',true)) {
                         $url = $this->modx->makeUrl($this->modx->resource->get('id'),'',array(
                             $this->getProperty('successKey','updpsuccess') => 1,
                         ),'full');
@@ -106,7 +106,7 @@ class LoginUpdateProfileController extends LoginController {
         $authenticated = true;
         if (!$this->modx->user->hasSessionContext($this->modx->context->get('key'))) {
             $authenticated = false;
-            if ($this->getProperty('redirectToLogin',true,'isset')) {
+            if ($this->getProperty('redirectToLogin',true)) {
                 $this->modx->sendUnauthorizedPage();
             }
         }
@@ -268,8 +268,8 @@ class LoginUpdateProfileController extends LoginController {
             $this->loadHooks('preHooks');
             $this->preHooks->loadMultiple($preHooks,$this->dictionary->toArray(),array(
                 'submitVar' => $this->getProperty('submitVar'),
-                'redirectToLogin' => $this->getProperty('redirectToLogin',true,'isset'),
-                'reloadOnSuccess' => $this->getProperty('reloadOnSuccess',true,'isset'),
+                'redirectToLogin' => $this->getProperty('redirectToLogin',true),
+                'reloadOnSuccess' => $this->getProperty('reloadOnSuccess',true),
             ));
             $values = $this->preHooks->getValues();
             if (!empty($values)) {
