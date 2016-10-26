@@ -790,6 +790,11 @@
               "name": "mathOperatorField",
               "description": "prop_register.mathoperatorfield_desc",
               "value": "operator"
+            },
+            {
+              "name": "preserveFieldsAfterRegister",
+              "description": "prop_register.preservefieldsafterregister_desc",
+              "value": true
             }
           ]
         },

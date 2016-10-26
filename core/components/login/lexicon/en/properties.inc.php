@@ -87,6 +87,7 @@ $_lang['prop_register.maximumPossibleStrongerPasswords_desc'] = 'If ensurePasswo
 $_lang['prop_register.ensurePasswordStrengthSuggestions'] = 'If ensurePasswordStrength is set to Yes, and the password fails the strength test, Register will supply this many number of suggestions to the user for their password.';
 $_lang['prop_register.allowedfields_desc'] = 'If set, will limit the fields that are allowed to be set on the newly created user to this comma-separated list. Also restricts extended fields.';
 $_lang['prop_register.removeexpiredregistrations_desc'] = 'If true, will remove registered users that have an expired, unused activation request and have never activated. It is recommended to leave this on to prevent spam.';
+$_lang['prop_register.preservefieldsafterregister_desc'] = 'If true, data of registration fields will be saved after successfull registration. To reset fields data, set to false';
 $_lang['opt_register.chunk'] = 'Chunk';
 $_lang['opt_register.file'] = 'File';
 $_lang['opt_register.inline'] = 'Inline';

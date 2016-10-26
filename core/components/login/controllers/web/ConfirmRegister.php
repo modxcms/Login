@@ -38,17 +38,27 @@ class LoginConfirmRegisterController extends LoginController {
             'authenticate' => true,
             'authenticateContexts' => $this->modx->context->get('key'),
             'errorPage' => false,
+            'toPlaceholders' => false, // If snippet calling into page, where placed register form, error must be shown
+            'errorPlaceholder' => 'login.confirmation.error',
+            'successPlaceholder' => 'login.confirmation.success',
             'redirectTo' => false,
             'redirectParams' => '',
             'redirectBack' => false,
             'redirectBackParams' => '',
             'redirectUnsetDefaultParams' => false,
+            'checkSubmitVars' => false, // If snippet calling into page, where placed register form, confirm request parameters must be checked and only if exists start process activation
+            'checkLoggedIn' => false, // If true prevent checking activation
         ));
     }
 
     public function process() {
-        $this->verifyManifest();
-        $this->getUser();
+        if ($this->isLoggedIn()
+            || $this->checkConfirmationSuccess()
+            || !$this->verifyManifest()
+            || !$this->getUser()) {
+            return '';
+        }
+
         $this->validatePassword();
 
         $this->onBeforeUserActivate();
@@ -57,8 +67,9 @@ class LoginConfirmRegisterController extends LoginController {
         $this->user->set('active',1);
         $this->user->_fields['cachepwd'] = '';
         $this->user->setDirty('cachepwd');
-        
+
         if (!$this->user->save()) {
+            $this->setConfirmationError('system-error');
             $this->modx->log(modX::LOG_LEVEL_ERROR,'[Register] Could not save activated user: '.$this->user->get('username'));
             return '';
         }
@@ -70,7 +81,10 @@ class LoginConfirmRegisterController extends LoginController {
 
         $this->addSessionContexts();
 
-        $this->redirectBack();
+        if (!$this->setConfirmationSuccess('activation')) {
+            $this->redirectBack();
+        }
+
         return '';
     }
 
@@ -83,7 +97,9 @@ class LoginConfirmRegisterController extends LoginController {
     public function verifyManifest() {
         $verified = false;
         if (empty($_REQUEST['lp']) || empty($_REQUEST['lu'])) {
-            $this->redirectAfterFailure();
+            if (!$this->getProperty('checkSubmitVars') && !$this->setConfirmationError('vars-not-found')) {
+                $this->redirectAfterFailure();
+            }
         } else {
             // get username and password from query params
             $this->username = $this->login->base64url_decode($_REQUEST['lu']);
@@ -100,6 +116,9 @@ class LoginConfirmRegisterController extends LoginController {
     public function getUser() {
         $this->user = $this->modx->getObject('modUser',array('username' => $this->username));
         if ($this->user == null || $this->user->get('active')) {
+            if ($this->setConfirmationError('user-not-found-or-activated')) {
+                return false;
+            }
             $this->redirectAfterFailure();
         }
         return $this->user;
@@ -136,7 +155,7 @@ class LoginConfirmRegisterController extends LoginController {
                 $found = true;
             }
         }
-        if (!$found) {
+        if (!$found && !$this->setConfirmationError('incorrect-password')) {
             $this->redirectAfterFailure();
         }
         return $found;
@@ -155,7 +174,9 @@ class LoginConfirmRegisterController extends LoginController {
         if (!empty($preventActivation)) {
             $success = false;
             $this->modx->log(modX::LOG_LEVEL_ERROR,'[Register] OnBeforeUserActivate event prevented activation for "'.$this->user->get('username').'" by returning false: '.$preventActivation);
-            $this->redirectAfterFailure();
+            if (!$this->setConfirmationError('activation-rejected')) {
+                $this->redirectAfterFailure();
+            }
         }
         return $success;
     }
@@ -197,19 +218,62 @@ class LoginConfirmRegisterController extends LoginController {
 
             /* handle persist params from Register snippet */
             $redirectUnsetDefaultParams = (boolean) $this->getProperty('redirectUnsetDefaultParams', 0, 'isset');
-			if(!$redirectUnsetDefaultParams) {
+            if(!$redirectUnsetDefaultParams) {
                 $persistParams = $_GET;
                 unset($persistParams['lp'],$persistParams['lu'],$persistParams['id']);
                 $persistParams['username'] = $this->user->get('username');
                 $persistParams['userid'] = $this->user->get('id');
                 $redirectParams = array_merge($redirectParams,$persistParams);
                 unset($redirectParams[$this->modx->getOption('request_param_alias',null,'q')],$redirectParams['redirectBack']);
-			}
+            }
 
             /* redirect user */
             $url = $this->modx->makeUrl($redirectTo,'',$redirectParams,'full');
             $this->modx->sendRedirect($url);
         }
+    }
+
+    /**
+     * TODO Add error messages into lexicon
+     */
+    protected function setConfirmationError($mess) {
+        if ($this->getProperty('toPlaceholders')) {
+            if ($placeholder = $this->getProperty('errorPlaceholder')) {
+                $this->modx->setPlaceholder($placeholder, $mess);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    protected function setConfirmationSuccess($mess) {
+        if ($this->getProperty('toPlaceholders')) {
+            $_SESSION['login.confirmation.success'] = $mess;
+            $modx = $this->modx;
+            $get = $_GET;
+            unset($get['lp'], $get['lu'], $get[$modx->getOption('request_param_alias', null, 'q')]);
+            $modx->sendRedirect($modx->makeUrl($modx->resource->id, '', $get, $modx->getOption('link_tag_scheme', null, 'abs')));
+            return true;
+        }
+        return false;
+    }
+
+    protected function checkConfirmationSuccess() {
+        if ($this->getProperty('toPlaceholders') && isset($_SESSION['login.confirmation.success'])) {
+            if ($placeholder = $this->getProperty('successPlaceholder')) {
+                $this->modx->setPlaceholder($placeholder, $_SESSION['login.confirmation.success']);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    protected function isLoggedIn() {
+        if ($this->getProperty('checkLoggedIn') && $this->modx->user->hasSessionContext($this->modx->context->key)) {
+            $this->setConfirmationError('logged-in');
+            return true;
+        }
+        return false;
     }
 }
 return 'LoginConfirmRegisterController';
