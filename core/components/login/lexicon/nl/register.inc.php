@@ -53,4 +53,4 @@ $_lang['register.spam_blocked'] = 'Uw verzending is geblokkeerd door een spamfil
 $_lang['register.spam_marked'] = ' - gemarkeerd als spam.';
 $_lang['register.user_err_save'] = 'Er is een fout opgetreden bij het opslaan van de gebruiker.';
 $_lang['register.username'] = 'Gebruikersnaam';
-$_lang['register.username_taken'] = 'Gebruikersnaam bestaat reed. Kies een alternatief.';
+$_lang['register.username_taken'] = 'Gebruikersnaam bestaat reeds. Kies een alternatief.';

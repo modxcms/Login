@@ -211,6 +211,7 @@ class Login {
      */
     public function getChunk($name,$properties,$type = 'modChunk') {
         $output = '';
+        if (!is_array($properties)) $properties = array();
         switch ($type) {
             case 'embedded':
                 if (!$this->modx->user->isAuthenticated($this->modx->context->get('key'))) {
