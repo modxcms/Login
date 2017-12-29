@@ -124,6 +124,11 @@ class LoginRegisterController extends LoginController {
         }
 
         $placeholders = $this->dictionary->toArray();
+
+        foreach ($placeholders as $k => $v) {
+            $placeholders[$k] = htmlspecialchars($v);
+        }
+
         $this->modx->toPlaceholders($placeholders, $placeholderPrefix);
         foreach ($placeholders as $k => $v) {
             if (is_array($v)) {

@@ -102,7 +102,13 @@ class LoginUpdateProfileController extends LoginController {
 
         if ($validate === false) {
             $placeholderPrefix = rtrim($this->getProperty('placeholderPrefix'), '.');
-            $this->modx->toPlaceholders($this->dictionary->toArray(), $placeholderPrefix);
+
+            $fields = $this->dictionary->toArray();
+            foreach ($fields as $k => $v) {
+                $fields[$k] = htmlspecialchars($v);
+            }
+
+            $this->modx->toPlaceholders($fields, $placeholderPrefix);
         }
 
         return '';

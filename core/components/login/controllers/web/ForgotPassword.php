@@ -75,7 +75,7 @@ class LoginForgotPasswordController extends LoginController {
             $this->handlePost();
             $fields = $this->dictionary->toArray();
             foreach ($fields as $k => $v) {
-                $this->placeholders['loginfp.post.'.$k] = str_replace(array('[',']'),array('&#91;','&#93'),$v);
+                $this->placeholders['loginfp.post.'.$k] = htmlspecialchars(str_replace(array('[',']'),array('&#91;','&#93'),$v));
             }
         }
 
