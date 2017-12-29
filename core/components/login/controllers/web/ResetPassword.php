@@ -180,7 +180,7 @@ class LoginResetPasswordController extends LoginController {
             'lp' => $this->login->base64url_encode($this->password),
             'lu' => $this->login->base64url_encode($this->username)
         ), $placeholderPrefix);
-        return $this->login->getChunk($this->getProperty('changePasswordTpl'), null, $this->getProperty('changePasswordTplType', 'modChunk'));
+        return $this->login->getChunk($this->getProperty('changePasswordTpl'), array(), $this->getProperty('changePasswordTplType', 'modChunk'));
     }
 
     /**

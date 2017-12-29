@@ -1,5 +1,8 @@
 Changelog file for Login component.
 
+- Fix ResetPassword passing null instead of an array to getChunk
+- Remove hash_class, salt and sessionid from placeholders
+
 1.9.4
 ====================================
 - Disable User/E-mail Enumeration

@@ -81,7 +81,7 @@ class LoginProfileController extends LoginController {
      * @return array
      */
     public function removePasswordPlaceholders(array $placeholders = array()) {
-        unset($placeholders['password'],$placeholders['cachepwd']);
+        unset($placeholders['password'],$placeholders['cachepwd'],$placeholders['hash_class'],$placeholders['salt'],$placeholders['sessionid']);
         return $placeholders;
     }
 
