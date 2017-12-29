@@ -27,19 +27,19 @@
  * @subpackage lexicon
  */
 $_lang['login.address'] = 'Indirizzo';
-$_lang['login.city'] = 'Citt‡';
+$_lang['login.city'] = 'Citt√†';
 $_lang['login.country'] = 'Stato';
 $_lang['login.email'] = 'Email';
-$_lang['login.email_taken'] = 'L\'e-mail "[[+email]]" Ë gi‡ in uso. Assicurarsi che non si Ë ancora registrati, e in caso contrario, si prega di specificare un altro indirizzo e-mail.';
+$_lang['login.email_taken'] = 'L\'e-mail "[[+email]]" √® gi√† in uso. Assicurarsi che non si √® ancora registrati, e in caso contrario, si prega di specificare un altro indirizzo e-mail.';
 $_lang['login.fax'] = 'Fax';
 $_lang['login.fullname'] = 'Nome completo';
 $_lang['login.mobilephone'] = 'Cellulare';
 $_lang['login.phone'] = 'Telefono';
 $_lang['login.profile_err_nf'] = 'Profilo non trovato!';
-$_lang['login.profile_err_save'] = 'Si Ë verificato un errore sconosciuto durante il tentativo di aggiornare il profilo';
+$_lang['login.profile_err_save'] = 'Si √® verificato un errore sconosciuto durante il tentativo di aggiornare il profilo';
 $_lang['login.profile_updated'] = 'Profilo aggiornato.';
 $_lang['login.state'] = 'Stato';
 $_lang['login.update_profile'] = 'Profile aggiornato';
-$_lang['login.username_err_ae'] = 'Nome utente gi‡ in uso. Prego specificarne un altro.';
+$_lang['login.username_err_ae'] = 'Nome utente gi√† in uso. Prego specificarne un altro.';
 $_lang['login.website'] = 'Website';
 $_lang['login.zip'] = 'CAP';

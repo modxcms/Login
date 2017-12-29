@@ -31,7 +31,7 @@ $_lang['login.login_err'] = 'Errore sconosciuto durante il login!';
 $_lang['login.logout'] = 'Logout';
 $_lang['login.logout_err'] = 'Errore sconosciuto durante il logout!';
 $_lang['login.password'] = 'Password';
-$_lang['login.recaptcha_err_load'] = 'Non è possibible caricare il servizio reCaptcha.';
+$_lang['login.recaptcha_err_load'] = 'Non Ã¨ possibible caricare il servizio reCaptcha.';
 $_lang['login.username'] = 'Nome utente';
 
 
