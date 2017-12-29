@@ -204,7 +204,7 @@ class LoginChangePasswordController extends LoginController {
 
         $fields = $this->dictionary->toArray();
         foreach ($fields as $k => $v) {
-            $fields[$k] = htmlspecialchars(str_replace(array('[', ']'), array('&#91;', '&#93'), $v));
+            $fields[$k] = htmlspecialchars($v);
         }
 
         $this->modx->toPlaceholders($this->errors, $errorPrefix);
