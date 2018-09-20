@@ -161,6 +161,12 @@
               "value": ""
             },
             {
+              "name": "redirectUnsetDefaultParams",
+              "description": "prop_confirmregister.redirectUnsetDefaultParam_desc",
+              "type": "combo-boolean",
+              "value": false
+            },
+            {
               "name": "authenticate",
               "description": "prop_confirmregister.authenticate_desc",
               "type": "combo-boolean",
@@ -807,6 +813,12 @@
               "description": "prop_register.preservefieldsafterregister_desc",
               "type": "combo-boolean",
               "value": true
+            },
+            {
+              "name": "redirectUnsetDefaultParams",
+              "description": "prop_register.redirectUnsetDefaultParam_desc",
+              "type": "combo-boolean",
+              "value": false
             }
           ]
         },

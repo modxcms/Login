@@ -89,6 +89,7 @@ $_lang['prop_register.ensurePasswordStrengthSuggestions'] = 'If ensurePasswordSt
 $_lang['prop_register.allowedfields_desc'] = 'If set, will limit the fields that are allowed to be set on the newly created user to this comma-separated list. Also restricts extended fields.';
 $_lang['prop_register.removeexpiredregistrations_desc'] = 'If true, will remove registered users that have an expired, unused activation request and have never activated. It is recommended to leave this on to prevent spam.';
 $_lang['prop_register.preservefieldsafterregister_desc'] = 'If true, data of registration fields will be saved after successfull registration. To reset fields data, set to false';
+$_lang['prop_register.redirectUnsetDefaultParam_desc'] = 'If true, default parameters will be removed from redirected urls.';
 $_lang['opt_register.chunk'] = 'Chunk';
 $_lang['opt_register.file'] = 'File';
 $_lang['opt_register.inline'] = 'Inline';
@@ -103,6 +104,7 @@ $_lang['opt_register.desc'] = 'Descending';
 /* ConfirmRegister snippet */
 $_lang['prop_confirmregister.redirectto_desc'] = 'Optional. After a successful confirmation, redirect to this Resource.';
 $_lang['prop_confirmregister.redirectparams_desc'] = 'Optional. A JSON object of parameters to pass when redirecting using redirectTo.';
+$_lang['prop_confirmregister.redirectUnsetDefaultParam_desc'] = 'If true, default parameters will be removed from redirected urls.';
 $_lang['prop_confirmregister.authenticate_desc'] = 'Authenticate and login the user to the current context after confirming registration. Defaults to true.';
 $_lang['prop_confirmregister.authenticatecontexts_desc'] = 'Optional. A comma-separated list of contexts to authenticate to. Defaults to the current context.';
 $_lang['prop_confirmregister.errorpage_desc'] = 'Optional. If set, will redirect user to a custom error page if they try to access the confirm register page with some validation error.';

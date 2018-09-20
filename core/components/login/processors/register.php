@@ -122,12 +122,12 @@ class LoginRegisterProcessor extends LoginProcessor {
         $userGroupField = $this->controller->getProperty('usergroupsField','');
         foreach ($fields as $field => $value) {
             if (!isset($profileFields[$field])
-                    && !isset($userFields[$field])
-                    && $field != 'password_confirm'
-                    && $field != 'passwordconfirm'
-                    && $field != $userGroupField
-                    && !in_array($field,$excludeExtended)
-                    ) {
+                && !isset($userFields[$field])
+                && $field != 'password_confirm'
+                && $field != 'passwordconfirm'
+                && $field != $userGroupField
+                && !in_array($field,$excludeExtended)
+               ) {
                 $extended[$field] = $value;
             }
         }
@@ -378,10 +378,12 @@ class LoginRegisterProcessor extends LoginProcessor {
         if (!empty($moderated)) {
             $moderatedResourceId = $this->controller->getProperty('moderatedResourceId','');
             if (!empty($moderatedResourceId)) {
-                $persistParams = array_merge($this->persistParams,array(
-                    'username' => $this->user->get('username'),
-                    'email' => $this->profile->get('email'),
-                ));
+                if ($this->controller->getProperty('redirectUnsetDefaultParams') == false) {
+                    $persistParams = array_merge($this->persistParams,array(
+                        'username' => $this->user->get('username'),
+                        'email' => $this->profile->get('email'),
+                    ));
+                }
                 $url = $this->modx->makeUrl($moderatedResourceId,'',$persistParams,'full');
                 if (!$this->login->inTestMode) {
                     $this->modx->sendRedirect($url);
@@ -402,10 +404,12 @@ class LoginRegisterProcessor extends LoginProcessor {
          * GET params `username` and `email` for you to use */
         $submittedResourceId = $this->controller->getProperty('submittedResourceId','');
         if (!empty($submittedResourceId)) {
-            $persistParams = array_merge($this->persistParams,array(
-                'username' => $this->user->get('username'),
-                'email' => $this->profile->get('email'),
-            ));
+            if ($this->controller->getProperty('redirectUnsetDefaultParams') == false) {
+                $persistParams = array_merge($this->persistParams,array(
+                    'username' => $this->user->get('username'),
+                    'email' => $this->profile->get('email'),
+                ));
+            }
             $url = $this->modx->makeUrl($submittedResourceId,'',$persistParams,'full');
             if (!$this->login->inTestMode) {
                 $this->modx->sendRedirect($url);

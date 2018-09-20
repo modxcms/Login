@@ -55,6 +55,7 @@ class LoginRegisterController extends LoginController {
             'postHooks' => '',
             'redirectBack' => '',
             'redirectBackParams' => '',
+            'redirectUnsetDefaultParams' => false,
             'submittedResourceId' => '',
             'submitVar' => 'login-register-btn',
             'successMsg' => '',
