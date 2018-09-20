@@ -50,6 +50,7 @@ class LoginLoginController extends LoginController {
             'rememberMeKey' => 'rememberme',
             'loginContext' => $this->modx->context->get('key'),
             'contexts' => '',
+            'jsonResponse' => false,
         ));
 
         if (!empty($_REQUEST['login_context'])) {
@@ -195,23 +196,41 @@ class LoginLoginController extends LoginController {
 
         if ($this->runPreLoginHooks()) {
             $response = $this->runLoginProcessor();
-            
             /* if we've got a good response, proceed */
             if (!empty($response) && !$response->isError()) {
                 $this->runPostLoginHooks($response);
 
                 /* process posthooks for login */
                 if ($this->postHooks->hasErrors()) {
-                    $errorPrefix = $this->getProperty('errorPrefix','error');
-                    $this->modx->toPlaceholders($this->postHooks->getErrors(),$errorPrefix);
-
+                    $errors = $this->postHooks->getErrors();
                     $errorMsg = $this->postHooks->getErrorMessage();
+                    // Return JSON posthook errors if requested.
+                    if ($this->getProperty('jsonResponse')) {
+                        $jsonErrorOutput = array(
+                            'success'   => false,
+                            'message'   => $errorMsg,
+                            'errors'    => $errors
+                        );
+                        header('Content-Type: application/json;charset=utf-8');
+                        exit($this->modx->toJSON($jsonErrorOutput));
+                    }
+                    $errorPrefix = $this->getProperty('errorPrefix','error');
+                    $this->modx->toPlaceholders($errors,$errorPrefix);
                     $this->modx->toPlaceholder('message',$errorMsg,$errorPrefix);
                 } else {
+                    // Return JSON success response if requested.
+                    if ($this->getProperty('jsonResponse')) {
+                        $jsonSuccessOutput = array(
+                            'success'   => true,
+                            'message'   => $this->getProperty('loginMsg')
+                        );
+                        header('Content-Type: application/json;charset=utf-8');
+                        exit($this->modx->toJSON($jsonSuccessOutput));
+                    }
                     $this->redirectAfterLogin($response);
                 }
 
-            /* logout failed, output error */
+            /* login failed, output error */
             } else {
                 $this->checkForRedirectOnFailedAuth($response);
                 $errorOutput = $this->prepareFailureMessage($response,$this->modx->lexicon('login.login_err'));
@@ -236,7 +255,17 @@ class LoginLoginController extends LoginController {
 
         /* process prehooks */
         if ($this->preHooks->hasErrors()) {
-            $this->modx->toPlaceholders($this->preHooks->getErrors(),$this->getProperty('errorPrefix','error'));
+            $errors = $this->preHooks->getErrors();
+            // Return JSON prehook errors if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'errors'    => $errors
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
+            $this->modx->toPlaceholders($errors,$this->getProperty('errorPrefix','error'));
 
             $errorMsg = $this->preHooks->getErrorMessage();
             $errorOutput = $this->modx->getChunk($this->getProperty('errTpl'), array('msg' => $errorMsg));
@@ -281,12 +310,40 @@ class LoginLoginController extends LoginController {
         $errors = $response->getFieldErrors();
         $message = $response->getMessage();
         if (!empty($errors)) {
+            // Return JSON login errors if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'message'   => $message,
+                    'errors'    => $errors
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
             foreach ($errors as $error) {
                 $errorOutput .= $this->modx->getChunk($errTpl, $error);
             }
         } elseif (!empty($message)) {
+            // Return JSON error message in response if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'message'   => $message
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
             $errorOutput = $this->modx->getChunk($errTpl, array('msg' => $message));
         } else {
+            // Return JSON default error if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'message'   => $defaultErrorMessage
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
             $errorOutput = $this->modx->getChunk($errTpl, array('msg' => $defaultErrorMessage));
         }
         return $errorOutput;
@@ -380,6 +437,15 @@ class LoginLoginController extends LoginController {
             /* if successful logout */
             if (!empty($response) && !$response->isError()) {
                 $this->runPostLogoutHooks($response);
+                // Return JSON logout success
+                if ($this->getProperty('jsonResponse')) {
+                    $jsonSuccessOutput = array(
+                        'success'   => true,
+                        'message'   => $this->getProperty('logoutMsg')
+                    );
+                    header('Content-Type: application/json;charset=utf-8');
+                    exit($this->modx->toJSON($jsonSuccessOutput));
+                }
                 $this->redirectAfterLogout($response);
 
             /* logout failed, output error */
@@ -401,9 +467,19 @@ class LoginLoginController extends LoginController {
         ));
 
         if ($this->preHooks->hasErrors()) {
-            $this->modx->toPlaceholders($this->preHooks->getErrors(),$this->getProperty('errorPrefix','error'));
-
+            $errors = $this->preHooks->getErrors();
             $errorMsg = $this->preHooks->getErrorMessage();
+            // Return JSON login errors if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'message'   => $errorMsg,
+                    'errors'    => $errors
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
+            $this->modx->toPlaceholders($errors,$this->getProperty('errorPrefix','error'));
             $errorOutput = $this->modx->getChunk($this->getProperty('errTpl'), array('msg' => $errorMsg));
             $this->modx->setPlaceholder('errors',$errorOutput);
             $success = false;
@@ -434,13 +510,23 @@ class LoginLoginController extends LoginController {
 
         /* log posthooks errors */
         if ($this->postHooks->hasErrors()) {
-            $this->modx->log(modX::LOG_LEVEL_ERROR,'[Login] Post-Hook errors: '.print_r($this->postHooks->getErrors(),true));
-
+            $errors = $this->postHooks->getErrors();
+            $this->modx->log(modX::LOG_LEVEL_ERROR,'[Login] Post-Hook errors: '.print_r($errors,true));
             $errorMsg = $this->postHooks->getErrorMessage();
             if (!empty($errorMsg)) {
                 $this->modx->log(modX::LOG_LEVEL_ERROR,'[Login] Post-Hook error: '.$errorMsg);
             }
             $success = false;
+            // Return JSON posthook logout errors if requested.
+            if ($this->getProperty('jsonResponse')) {
+                $jsonErrorOutput = array(
+                    'success'   => false,
+                    'message'   => $errorMsg,
+                    'errors'    => $errors
+                );
+                header('Content-Type: application/json;charset=utf-8');
+                exit($this->modx->toJSON($jsonErrorOutput));
+            }
         }
         return $success;
     }
