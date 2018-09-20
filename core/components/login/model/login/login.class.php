@@ -185,18 +185,8 @@ class Login {
      * @param integer $length The length of the generated password.
      * @return string The newly-generated password.
      */
-    public function generatePassword($length=8) {
-        $pword = '';
-        $charmap = '0123456789bcdfghjkmnpqrstvwxyz';
-        $i = 0;
-        while ($i < $length) {
-            $char = substr($charmap, rand(0, strlen($charmap)-1), 1);
-            if (!strstr($pword, $char)) {
-                $pword .= $char;
-                $i++;
-            }
-        }
-        return $pword;
+    public function generatePassword($length=null) {
+        $this->modx->user->generatePassword($length);
     }
 
     /**
