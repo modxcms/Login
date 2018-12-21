@@ -235,7 +235,7 @@ class Login {
                 $chunk = $this->modx->newObject('modChunk');
                 $chunk->setContent(file_get_contents($name));
                 $chunk->setCacheable(false);
-                $output = $chunk->process($properties);
+                $output .= $chunk->process($properties);
 
                 $this->modx->setPlaceholders($properties);
                 break;
