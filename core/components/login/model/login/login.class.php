@@ -231,7 +231,12 @@ class Login {
                     $this->modx->getOption('assets_path'),
                     $this->modx->getOption('core_path'),
                 ),$name);
-                $output .= file_get_contents($name);
+                
+                $chunk = $this->modx->newObject('modChunk');
+                $chunk->setContent(file_get_contents($name));
+                $chunk->setCacheable(false);
+                $output = $chunk->process($properties);
+
                 $this->modx->setPlaceholders($properties);
                 break;
             case 'inline':
