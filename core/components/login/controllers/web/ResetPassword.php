@@ -266,7 +266,7 @@ class LoginResetPasswordController extends LoginController {
      */
     public function confirmMatchedPasswords() {
         $validated = true;
-        $fieldConfirmNewPassword = $this->getProperty('fieldConfirmNewPassword','password_new_confirm');
+        $fieldConfirmNewPassword = $this->getProperty('fieldConfirmNewPassword');
         /* if using confirm, ensure they match */
         if (!empty($fieldConfirmNewPassword)) {
             $confirmNewPassword = $this->dictionary->get($fieldConfirmNewPassword);
