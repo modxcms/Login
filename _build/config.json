@@ -574,6 +574,11 @@
               "value": ""
             },
             {
+              "name": "usergroupsFieldDisallow",
+              "description": "prop_register.usergroupsfielddisallow_desc",
+              "value": "Administrator"
+            },
+            {
               "name": "submittedResourceId",
               "description": "prop_register.submittedresourceid_desc",
               "value": ""
