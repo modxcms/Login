@@ -167,7 +167,8 @@ class LoginRegisterProcessor extends LoginProcessor {
         $userGroupsField = $this->controller->getProperty('usergroupsField','');
         $userGroups = !empty($userGroupsField) && array_key_exists($userGroupsField,$fields) ? $fields[$userGroupsField] : array();
         $userGroupsFieldDisallow = $this->controller->getProperty('usergroupsFieldDisallow','Administrator');
-        $this->setUserGroups($userGroups, $userGroupsFieldDisallow);
+        $userGroupsFieldAllow = $this->controller->getProperty('usergroupsFieldAllow','');
+        $this->setUserGroups($userGroups, $userGroupsFieldDisallow, $userGroupsFieldAllow);
     }
 
     /**
@@ -199,14 +200,16 @@ class LoginRegisterProcessor extends LoginProcessor {
      * @param string $userGroups
      * @return array
      */
-    public function setUserGroups($userGroups, $userGroupsFieldDisallow = 'Administrator') {
+    public function setUserGroups($userGroups, $userGroupsFieldDisallow = 'Administrator', $userGroupsFieldAllow = '') {
         $added = array();
         /* if $userGroups set in form, override here; otherwise use snippet property */
         $this->userGroups = !empty($userGroups) ? $userGroups : $this->controller->getProperty('usergroups', '');
         if (!empty($this->userGroups)) {
             $this->userGroups = is_array($this->userGroups) ? $this->userGroups : explode(',',$this->userGroups);
-            $disallowed = $this->getUserGroupsDisallowed($userGroupsFieldDisallow);
+            $disallowed = $this->getUserGroups($userGroupsFieldDisallow);
             $disallowedKeys = array_keys($disallowed);
+            $allowed = $this->getUserGroups($userGroupsFieldAllow);
+            $allowedKeys = array_keys($allowed);
 
             foreach ($this->userGroups as $userGroupMeta) {
                 $userGroupMeta = explode(':',$userGroupMeta);
@@ -236,6 +239,21 @@ class LoginRegisterProcessor extends LoginProcessor {
                         }
                     } else {
                         continue;
+                    }
+                }
+
+                if (!empty($allowedKeys)) {
+                    if (!in_array($userGroup->get('name'), $allowedKeys, true)  &&
+                        !in_array($userGroup->get('id'), $allowedKeys, true)) {
+                        continue;
+                    }
+                    $allowKey = in_array($userGroup->get('name'), $allowedKeys, true) ?
+                        $userGroup->get('name') : $userGroup->get('id');
+                    $allowRank = $allowed[$allowKey];
+                    if ($allowRank) {
+                        if ($role && ($role->get('rank') < $allowRank)) {
+                            continue;
+                        }
                     }
                 }
 
@@ -464,7 +482,7 @@ class LoginRegisterProcessor extends LoginProcessor {
         return true;
     }
 
-    private function getUserGroupsDisallowed($userGroupsFieldDisallow): array
+    private function getUserGroups($userGroupsFieldDisallow): array
     {
         $userGroupsDisallowed = array();
         $userGroupsFieldDisallow = is_array($userGroupsFieldDisallow) ?
@@ -478,8 +496,8 @@ class LoginRegisterProcessor extends LoginProcessor {
                 $role = $this->modx->getObject('modUserGroupRole', $role_pk);
                 if ($role) {
                     $rank = $role->get('rank');
-                } else if ((int) $groupRole[1]> 0) {
-                    $rank = (int) $groupRole[1] ;
+                } else if ((int) $groupRole[1] > 0) {
+                    $rank = (int) $groupRole[1];
                 }
             }
             $userGroupsDisallowed[$groupRole[0]] = $rank;
