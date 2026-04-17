@@ -482,27 +482,29 @@ class LoginRegisterProcessor extends LoginProcessor {
         return true;
     }
 
-    private function getUserGroups($userGroupsFieldDisallow): array
+    private function getUserGroups($userGroupsField): array
     {
-        $userGroupsDisallowed = array();
-        $userGroupsFieldDisallow = is_array($userGroupsFieldDisallow) ?
-            $userGroupsFieldDisallow : explode(',',$userGroupsFieldDisallow);
-        foreach ($userGroupsFieldDisallow as $userGroupDisallow) {
-            $groupRole = explode(':',$userGroupDisallow);
+        $userGroups = [];
+        $userGroupsField = is_array($userGroupsField) ?
+            $userGroupsField : explode(',', $userGroupsField);
+        foreach ($userGroupsField as $userGroupDisallow) {
+            $groupRole = explode(':', $userGroupDisallow);
             $rank = 0;
-            if (empty($groupRole[0])) continue;
+            if (empty($groupRole[0])) {
+                continue;
+            }
             if (isset($groupRole[1]) && !empty($groupRole[1])) {
-                $role_pk = (int) $groupRole[1] > 0 ? ['id' => (int) $groupRole[1]] : ['name' => $groupRole[1]];
-                $role = $this->modx->getObject('modUserGroupRole', $role_pk);
+                $pk = intval($groupRole[1]) > 0 ? 'id' : 'name';
+                $role = $this->modx->getObject('modUserGroupRole', [$pk => $groupRole[1]]);
                 if ($role) {
                     $rank = $role->get('rank');
-                } else if ((int) $groupRole[1] > 0) {
-                    $rank = (int) $groupRole[1];
+                } else if (intval($groupRole[1]) > 0) {
+                    $rank = intval($groupRole[1]);
                 }
             }
-            $userGroupsDisallowed[$groupRole[0]] = $rank;
+            $userGroups[$groupRole[0]] = $rank;
         }
-        return $userGroupsDisallowed;
+        return $userGroups;
     }
 }
 return 'LoginRegisterProcessor';

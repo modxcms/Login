@@ -242,6 +242,8 @@ abstract class LoginController {
  * @package login
  */
 abstract class LoginProcessor {
+    /** @var modX $modx */
+    public $modx;
     /** @var Login $login */
     public $login;
     /** @var LoginController $controller */

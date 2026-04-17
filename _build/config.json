@@ -3,7 +3,7 @@
   "lowCaseName": "login",
   "description": "Login and Registrations",
   "author": "Jason Coward & Shaun McCormick",
-  "version": "1.9.14",
+  "version": "1.9.15",
   "package": {
     "elements": {
       "snippets": [
