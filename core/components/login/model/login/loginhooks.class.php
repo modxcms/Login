@@ -134,7 +134,7 @@ class LoginHooks {
             $this->errors = array_merge($this->errors,$success);
             $success = false;
         } else if ($success != true) {
-            $this->errors[$hookName] .= ' '.$success;
+            $this->errors[$hookName] = ($this->errors[$hookName] ?? '') . ' ' . $success;
             $success = false;
         }
         return $success;
@@ -152,6 +152,7 @@ class LoginHooks {
         $hook =& $this;
         $fields = $this->fields;
         $errors =& $this->errors;
+        $success = false;
         try {
             $success = include $path;
         } catch (Exception $e) {
@@ -180,7 +181,7 @@ class LoginHooks {
      * @return string The added error message with the error wrapper.
      */
     public function addError($key,$value) {
-        $this->errors[$key] .= $value;
+        $this->errors[$key] = ($this->errors[$key] ?? '') . $value;
         return $this->errors[$key];
     }
 
