@@ -29,7 +29,7 @@
 $_lang['login.email'] = 'Adresse email';
 $_lang['login.forgot_password'] = 'Mot de passe oublié';
 $_lang['login.forgot_password_email_subject'] = 'Email de récupération de mot de passe';
-$_lang['login.forgot_password_email_text'] = 'Bonjour [[+username]] <p>,</p>
+$_lang['login.forgot_password_email_text'] = '<p>Bonjour [[+username]],</p>
 <p>pour activer votre nouveau mot de passe, veuillez cliquer sur le lien suivant :</p>
 <p><a href="[[+confirmUrl]]">[[+confirmUrl]]</a></p>
 <p>si l’opération réussit, vous pouvez utiliser ce mot de passe pour vous connecter :</p>
